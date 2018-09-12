@@ -7,7 +7,8 @@ Useful for coaching and illustrating tactics and specific plays.
 ## How to use
 
 Download the files, open the *index.html* file with Firefox or Microsoft Edge and you are good to go.
-Chrome does not load local images, so you need to host the files in a local/online server and open the tool from there.
+
+If you want to use with Chrome, it won't load local images so you will need to host the files in a local/online server and open the tool from there.
 
 More instructions shown on screen after opening the tool.
 
