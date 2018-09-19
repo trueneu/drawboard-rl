@@ -1,9 +1,10 @@
 var pg, imgField, imgField6, imgField9, imgFieldKeys, rotateKeys, orOctane, blOctane, orDominus, blDominus, orBatmob, blBatmob, ball, penOn, penOff, reset, title, signature, orange, blue, penColor, penWeight;
 var drawMode = false;
-var things = [];
-var field = 1
-var help = true;
+var things = []; //array for the objects (cars and ball)
+var field = 1; //variable to define the grid template over the field
+var help = true; //variable that display instructions on screen
 
+//Class for the objects (cars and ball) used within the drawboard.
 class Thing {
 	constructor(x,y,img) {
 		this.x = x;
@@ -12,7 +13,7 @@ class Thing {
 		this.img = img;
     this.select = false;
 	}
-
+//function to display it on screen.
   display() {
     push();
     translate(this.x, this.y)
@@ -22,6 +23,7 @@ class Thing {
   }
 }
 
+//function that loads all images in the app
 function preload() {
   imgField = loadImage("assets/field.png");
 	imgField6 = loadImage("assets/field6.png");
@@ -42,12 +44,13 @@ function preload() {
 	signature = loadImage("assets/signature.png");
 }
 
+//defines the workspace
 function setup() {
   createCanvas(windowWidth, windowHeight);
   orange = color('#f15a24');
   blue = color('#0071bc');
-	penColor = color(0);
-	penWeight = 4;
+	penColor = color(0); //Brush default color
+	penWeight = 4; //Brush default windowHeight
 	pg = createGraphics(windowWidth, windowHeight);
   imageMode(CENTER);
   angleMode(DEGREES);
@@ -55,6 +58,7 @@ function setup() {
   frameRate(60);
 }
 
+//function that actually display stuff on screen. Refreshes every frame.
 function draw() {
 	fill(blue);
 	rect(0,0,windowWidth/2,windowHeight);
@@ -104,7 +108,7 @@ function draw() {
 	for (var i = 0; i < things.length; i++) {
 			things[i].display();
 	}
-	if (help) {
+	if (help) { // This draw the instructions
 		push();
 		fill(0);
 		rect(150, windowHeight/2-380, 300, 140);
@@ -131,10 +135,11 @@ function draw() {
 	}
 }
 
+//Function for keyboard hotkeys
 function keyPressed() {
-	if (key === 'H') help = !help;
-	if (key === 'E') pg = createGraphics(windowWidth, windowHeight);
-  if (key === 'D') drawMode = !drawMode;
+	if (key === 'h') help = !help;
+	if (key === 'e') pg = createGraphics(windowWidth, windowHeight);
+  if (key === 'd') drawMode = !drawMode;
 	if (key === '1') field = 1;
 	if (key === '2') field = 2;
 	if (key === '3') field = 3;
@@ -154,6 +159,7 @@ function keyPressed() {
   }
 }
 
+//function for selecting tools and items on screen
 function mousePressed() {
 	help = false;
 	if (mouseX > 50-23 && mouseX < 50+23 && mouseY > windowHeight/2-340-23 && mouseY < windowHeight/2-340+23) {
@@ -192,10 +198,10 @@ function mousePressed() {
 				break;
 			}
 		}
-		if (!ifBall) {
+		if (!ifBall) { // this one spawn the ball
 			things.push(new Thing(windowWidth/2, windowHeight/2, ball));
 		}
-  } else if (mouseX > 50-20 && mouseX < 50+20) {
+  } else if (mouseX > 50-20 && mouseX < 50+20) { 		// these spawn the blue cars
     if (mouseY > windowHeight/2-80 && mouseY < windowHeight/2-40) {
       things.push(new Thing(mouseX, mouseY, blOctane));
     } else if (mouseY > windowHeight/2-20 && mouseY < windowHeight/2+20) {
@@ -203,7 +209,7 @@ function mousePressed() {
     } else if (mouseY > windowHeight/2+45 && mouseY < windowHeight/2+85) {
       things.push(new Thing(mouseX, mouseY, blBatmob));
     }
-  } else if (mouseX > 100-20 && mouseX < 100+20) {
+  } else if (mouseX > 100-20 && mouseX < 100+20) {		// these spawn the orange cars
     if (mouseY > windowHeight/2-80 && mouseY < windowHeight/2-40) {
       things.push(new Thing(mouseX, mouseY, orOctane));
     } else if (mouseY > windowHeight/2-20 && mouseY < windowHeight/2+20) {
@@ -212,7 +218,7 @@ function mousePressed() {
       things.push(new Thing(mouseX, mouseY, orBatmob));
     }
 	}
-	if (!drawMode) {
+	if (!drawMode) { //Activates draw mode
     for (var i = 0; i < things.length; i++) {
       if (dist(mouseX, mouseY, things[i].x, things[i].y) < 20) {
         things[i].select = true;
@@ -223,6 +229,7 @@ function mousePressed() {
   }
 }
 
+//function to drag stuff around
 function mouseDragged() {
   if (drawMode) {
     push();
@@ -240,6 +247,7 @@ function mouseDragged() {
   }
 }
 
+//function to resize the canvas if resizing thw window
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
