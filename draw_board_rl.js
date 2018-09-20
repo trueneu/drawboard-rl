@@ -5,11 +5,14 @@ var things = []; //array for the objects (cars and ball)
 var field = 1; //variable to define the grid template over the field
 var help = true; //variable that display instructions on screen
 
+let z_counter = 0;
+
 //Class for the objects (cars and ball) used within the drawboard.
 class Thing {
-    constructor(x, y, img) {
+    constructor(x, y, z, img) {
         this.x = x;
         this.y = y;
+        this.z = z;
         this.angle = 0;
         this.img = img;
         this.select = false;
@@ -164,7 +167,7 @@ function keyPressed() {
 //function for selecting tools and items on screen
 function mousePressed() {
     help = false;
-    if (mouseX > 50 - 23 && mouseX < 50 + 23 && mouseY > windowHeight / 2 - 340 - 23 && mouseY < windowHeight / 2 - 340 + 23) {
+    if (mouseX > 50 - 23 && mouseX < 50 + 23 && mouseY > windowHeight / 2 - 340 - 23 && mouseY < windowHeight / 2 - 340 + 23) { //Activates draw mode
         drawMode = !drawMode;
     } else if (mouseX > 100 - 23 && mouseX < 100 + 23 && mouseY > windowHeight / 2 - 340 - 23 && mouseY < windowHeight / 2 - 340 + 23) {
         pg = createGraphics(windowWidth, windowHeight);
@@ -200,33 +203,47 @@ function mousePressed() {
                 break;
             }
         }
-        if (!ifBall) { // this one spawn the ball
-            things.push(new Thing(windowWidth / 2, windowHeight / 2, ball));
+        if (!ifBall) { // this one spawns the ball
+            things.push(new Thing(windowWidth / 2, windowHeight / 2, z_counter, ball));
+            z_counter++;
         }
     } else if (mouseX > 50 - 20 && mouseX < 50 + 20) { 		// these spawn the blue cars
         if (mouseY > windowHeight / 2 - 80 && mouseY < windowHeight / 2 - 40) {
-            things.push(new Thing(mouseX, mouseY, blOctane));
+            things.push(new Thing(mouseX, mouseY, z_counter, blOctane));
         } else if (mouseY > windowHeight / 2 - 20 && mouseY < windowHeight / 2 + 20) {
-            things.push(new Thing(mouseX, mouseY, blDominus));
+            things.push(new Thing(mouseX, mouseY, z_counter, blDominus));
         } else if (mouseY > windowHeight / 2 + 45 && mouseY < windowHeight / 2 + 85) {
-            things.push(new Thing(mouseX, mouseY, blBatmob));
+            things.push(new Thing(mouseX, mouseY, z_counter, blBatmob));
         }
+        z_counter++;
     } else if (mouseX > 100 - 20 && mouseX < 100 + 20) {		// these spawn the orange cars
         if (mouseY > windowHeight / 2 - 80 && mouseY < windowHeight / 2 - 40) {
-            things.push(new Thing(mouseX, mouseY, orOctane));
+            things.push(new Thing(mouseX, mouseY, z_counter, orOctane));
         } else if (mouseY > windowHeight / 2 - 20 && mouseY < windowHeight / 2 + 20) {
-            things.push(new Thing(mouseX, mouseY, orDominus));
+            things.push(new Thing(mouseX, mouseY, z_counter, orDominus));
         } else if (mouseY > windowHeight / 2 + 45 && mouseY < windowHeight / 2 + 85) {
-            things.push(new Thing(mouseX, mouseY, orBatmob));
+            things.push(new Thing(mouseX, mouseY, z_counter, orBatmob));
         }
+        z_counter++;
     }
-    if (!drawMode) { //Activates draw mode
-        for (var i = 0; i < things.length; i++) {
+    if (!drawMode) {
+        let z_s = {};
+        for (let i = 0; i < things.length; i++) {
             if (dist(mouseX, mouseY, things[i].x, things[i].y) < 20) {
-                things[i].select = true;
-            } else {
-                things[i].select = false;
+                z_s[i] = things[i].z;
             }
+            things[i].select = false;
+        }
+
+        let max_z = 0;
+        let selected = -1;
+        for (let i in z_s) {
+            if (z_s[i] > max_z) { selected = i; max_z = z_s[i] }
+        }
+        if (selected !== -1) {
+            things[selected].select = true;
+            // things[selected].z = z_counter;  // Turn it back on as soon as we figure out p5 layers
+            // z_counter++;
         }
     }
 }
